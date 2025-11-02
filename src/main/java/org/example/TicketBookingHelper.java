@@ -16,7 +16,7 @@ public class TicketBookingHelper {
         Train train = TrainsRepo.getTrainByNumber(bookingRequest.getTrainNumber());
         List<String> route = train.getRoute();
 
-        if (!route.contains(bookingRequest.getSource()) || !route.contains(bookingRequest.getDestination())) {
+        if (route.contains(bookingRequest.getSource()) && route.contains(bookingRequest.getDestination())) {
             int sourcePos = train.getRoute().indexOf(bookingRequest.getSource());
             int destinationPos = train.getRoute().indexOf(bookingRequest.getDestination());
 
@@ -27,8 +27,9 @@ public class TicketBookingHelper {
             } else {
                 throw new TrainJourneyException("The destination cannot be before the source");
             }
+        } else {
+            throw new TrainJourneyException("Source or Destination are not part of route");
         }
-        return null;
     }
 
     public double calculateTicketFare (BookingRequest bookingRequest, Train train) {
